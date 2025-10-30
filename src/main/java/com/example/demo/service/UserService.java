@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.UserLoginRequest;
 import com.example.demo.dto.UserRegisterRequest;
+import com.example.demo.exception.AuthenticationException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Users;
 import com.example.demo.repository.UserRepository;
@@ -50,6 +53,22 @@ public class UserService {
     public Users findUserById(Long id){
         return userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: "+ id));
+    }
+
+    public Users authenticateUser(UserLoginRequest request) {
+
+        Users storedUser = userRepository.findByUsername(request.getUsername())
+            .orElseThrow(() -> new AuthenticationException("Invalid username or password"));
+
+
+        boolean passwordMatches = passwordEncoder.matches(request.getPassword(), storedUser.getPasswordHash());
+
+        if(!passwordMatches){
+            throw new AuthenticationException("Invalid username or password.");
+        }
+
+        return storedUser;
+
     }
 
 }
