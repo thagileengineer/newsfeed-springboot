@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.LoginToken;
 import com.example.demo.dto.UserLoginRequest;
 import com.example.demo.dto.UserRegisterRequest;
 import com.example.demo.dto.UserResponse;
@@ -40,14 +41,16 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginRequest request) {
+    public ResponseEntity<LoginToken> loginUser(@Valid @RequestBody UserLoginRequest request) {
 
         Users authenticatedUser = userService.authenticateUser(request);
         userService.authenticateUser(request);
 
         String jwtToken = jwtUtils.generateToken(authenticatedUser);
 
-        return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+        LoginToken loginToken = new LoginToken(jwtToken);
+
+        return new ResponseEntity<>(loginToken, HttpStatus.OK);
     }
 
 }
