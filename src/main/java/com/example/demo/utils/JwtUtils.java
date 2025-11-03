@@ -35,7 +35,7 @@ public class JwtUtils {
             throw new IllegalStateException("JWT Secret missing");
         }
 
-        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
     public String generateToken(Users user){
