@@ -1,15 +1,11 @@
 package com.example.demo.service;
 
 
-import java.util.Collections;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.UserLoginRequest;
 import com.example.demo.dto.UserRegisterRequest;
-import com.example.demo.dto.UserResponse;
 import com.example.demo.exception.AuthenticationException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Users;
