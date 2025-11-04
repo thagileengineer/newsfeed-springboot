@@ -43,6 +43,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 // Allow public access to the registration endpoint
                 .requestMatchers("/users/register").permitAll()
+                .requestMatchers("/users/bulk-register").permitAll()
                 .requestMatchers("/users/login").permitAll()
                 // Require authentication for all other requests
                 .anyRequest().authenticated()
