@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Users;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -35,7 +37,7 @@ public class JwtUtils {
             throw new IllegalStateException("JWT Secret missing");
         }
 
-        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(Users user){
@@ -53,5 +55,40 @@ public class JwtUtils {
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    public boolean validateToken(String token){
+        try {
+            Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token);
+
+            return true;
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT expired:" + e.getMessage());
+        } catch (Exception e){
+            System.out.println("Invalid JWT: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public String extractUsername(String token){
+        Claims claims = extractAllClaims(token);
+
+        return (String) claims.get("username");
+    }
+
+    public String extractUserId(String token){
+        return extractAllClaims(token).getSubject();
+    }
+
+    public Claims extractAllClaims(String token){
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

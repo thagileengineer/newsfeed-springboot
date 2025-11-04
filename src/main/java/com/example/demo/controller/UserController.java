@@ -18,6 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/users")
@@ -51,6 +54,21 @@ public class UserController {
         LoginToken loginToken = new LoginToken(jwtToken);
 
         return new ResponseEntity<>(loginToken, HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
+        Users user = userService.findByUsername(username);
+        
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setUsername(user.getUsername());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setMiddleName(user.getMiddleName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setCreatedAt(user.getCreatedAt());
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
 }

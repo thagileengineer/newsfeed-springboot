@@ -60,6 +60,7 @@ public class RestExceptionHandler {
     public ResponseEntity<String> handleGlobalException(Exception ex) {
         // Log the exception details here for server-side debugging
         // return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+        ex.printStackTrace();
         return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
